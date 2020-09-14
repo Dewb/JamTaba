@@ -33,13 +33,13 @@ jobs:
           
       - name: Expand JamTaba static library dependencies
         run: |
-          Expand-Archive -Force JamTaba-static-libs.zip libs
+          Expand-Archive -Force -Path JamTaba-static-libs.zip -DestinationPath libs
 
       - name: Fetch VST SDK
         run: |
           Invoke-WebRequest -Uri "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0" -OutFile VST_SDK.zip
           mkdir VST_SDK
-          Expand-Archive -Force VST_SDK.zip VST_SDK
+          Expand-Archive -Force -Path VST_SDK.zip -DestinationPath VST_SDK
           
       - name: Build Standalone Windows
         run: |
