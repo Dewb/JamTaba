@@ -25,19 +25,13 @@ jobs:
     
       - name: Fetch JamTaba static library dependencies
         run: |
-          Invoke-WebRequest -Uri "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0" -OutFile JamTaba-static-libs.zip
-          
-      - name: Create folder for JamTaba static library dependencies
-        run: |
+          Invoke-WebRequest -Uri "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=1" -OutFile JamTaba-static-libs.zip
           mkdir libs
-          
-      - name: Expand JamTaba static library dependencies
-        run: |
           Expand-Archive -Force -Path JamTaba-static-libs.zip -DestinationPath libs
 
       - name: Fetch VST SDK
         run: |
-          Invoke-WebRequest -Uri "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0" -OutFile VST_SDK.zip
+          Invoke-WebRequest -Uri "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -OutFile VST_SDK.zip
           mkdir VST_SDK
           Expand-Archive -Force -Path VST_SDK.zip -DestinationPath VST_SDK
           
