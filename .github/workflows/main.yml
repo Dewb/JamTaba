@@ -26,18 +26,18 @@ jobs:
       - name: Fetch JamTaba static library dependencies
         run: |
           Invoke-WebRequest -Uri "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=1" -OutFile JamTaba-static-libs.zip
-          mkdir libs
-          Expand-Archive -Force -Path JamTaba-static-libs.zip -DestinationPath libs
+          mkdir $env:GITHUB_WORKSPACE\JamTaba\libs
+          Expand-Archive -Force -Path JamTaba-static-libs.zip -DestinationPath $env:GITHUB_WORKSPACE\JamTaba\libs
 
       - name: Fetch VST SDK
         run: |
           Invoke-WebRequest -Uri "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -OutFile VST_SDK.zip
-          mkdir VST_SDK
-          Expand-Archive -Force -Path VST_SDK.zip -DestinationPath VST_SDK
+          mkdir $env:GITHUB_WORKSPACE\JamTaba\VST_SDK
+          Expand-Archive -Force -Path VST_SDK.zip -DestinationPath $env:GITHUB_WORKSPACE\JamTaba\VST_SDK
           
       - name: Build Standalone Windows
         run: |
-          cd $GITHUB_WORKSPACE/PROJECTS/Standalone
+          cd $env:GITHUB_WORKSPACE\JamTaba\PROJECTS\Standalone
           qmake.exe Standalone.pro -r -spec win32-g++ CONFIG=release
           make
 
