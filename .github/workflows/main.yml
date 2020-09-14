@@ -2,11 +2,81 @@ name: CI Build
 
 on:
   push:
-    branches: [ master, ci_test ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
 jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.8.0
+        with:
+          version: '5.3'
+          host: 'mac'
+          target: 'desktop'
+          extra: '--external 7z'
+    
+      - name: Fetch JamTaba static library dependencies
+        run: |
+          curl "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=1" -O JamTaba-static-libs.zip
+          mkdir $env:GITHUB_WORKSPACE/libs
+          unzip JamTaba-static-libs.zip -d $env:GITHUB_WORKSPACE/libs
+
+      - name: Fetch VST SDK
+        run: |
+          curl "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -O VST_SDK.zip
+          mkdir $env:GITHUB_WORKSPACE/VST_SDK
+          unzip VST_SDK.zip -d $env:GITHUB_WORKSPACE/VST_SDK
+          
+      - name: Build Standalone MacOS
+        run: |
+          cd $env:GITHUB_WORKSPACE/PROJECTS/Standalone
+          qmake Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
+          lrelease Standalone.pro
+          make -s -j 4
+          
+      - name: Build AU plugin
+        run: |
+          cd $env:GITHUB_WORKSPACE/PROJECTS/AUPlugin
+          xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
+      
+      - name: Create MacOS installer
+        run: |
+          npm install -g appdmg
+          cp $env:GITHUB_WORKSPACE/Release/Standalone/JamTaba2.app $env:GITHUB_WORKSPACE/installers/mac
+          cp $env:GITHUB_WORKSPACE/Release/AUPlugin/Release/JamTaba.component $env:GITHUB_WORKSPACE/installers/mac
+          cd $env:GITHUB_WORKSPACE/installers/mac
+          appdmg node-appdmg.json JamTaba_2_Installer.dmg
+          
+      - name: Create MacOS Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: true
+        
+      - name: Upload MacOS Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: $env:GITHUB_WORKSPACE/installers/mac/JamTaba_2_Installer.dmg
+          asset_name: JamTaba_2_Installer.dmg
+          asset_content_type: application/octet-stream
+          
+          
+
   build-win:
     runs-on: windows-latest
 
