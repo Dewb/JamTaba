@@ -36,6 +36,7 @@ jobs:
       - name: Build Standalone MacOS
         run: |
           cd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
+          xcodebuild -license accept
           qmake Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
           lrelease Standalone.pro
           make -s -j 4
