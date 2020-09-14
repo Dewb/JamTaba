@@ -23,18 +23,18 @@ jobs:
           arch: 'win64_msvc2013_64'
           extra: '--external 7z'
     
-      - name: Fetch Static Libs
-        uses: boyeborg/fetch-url-action@v1.1
+      - name: Fetch JamTaba static library dependencies
+        uses: wei/curl@v1.1.1
         with:
-         url: https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0
+          args: https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0 -O
 
       - name: Fetch VST SDK
-        uses: boyeborg/fetch-url-action@v1.1
+        uses: wei/curl@v1.1.1
         with:
-          url: https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0
+          args: https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0 -O
 
       # Runs a set of commands using the runners shell
-      - name: Decompress zips
+      - name: Decompress zip archives
         run: |
           mkdir libs
           unzip JamTaba-static-libs.zip -d libs
@@ -43,6 +43,7 @@ jobs:
           
       - name: Build Standalone Windows
         run: |
-          qmake.exe $GITHUB_WORKSPACE/PROJECTS/Standalone/Standalone.pro -r -spec win32-g++ CONFIG=release
+          cd $GITHUB_WORKSPACE/PROJECTS/Standalone
+          qmake.exe Standalone.pro -r -spec win32-g++ CONFIG=release
           make
 
