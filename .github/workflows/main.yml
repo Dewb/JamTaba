@@ -25,15 +25,15 @@ jobs:
     
       - name: Fetch JamTaba static library dependencies
         run: |
-          python3 -c "from urllib.request import urlretrieve; urlretrieve('https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0', 'JamTaba-static-libs.zip')"
+          Invoke-WebRequest -Uri https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0 -OutFile JamTaba-static-libs.zip
           mkdir libs
-          tar -xf JamTaba-static-libs.zip -C libs
+          Expand-Archive -Force JamTaba-static-libs.zip libs
 
       - name: Fetch VST SDK
         run: |
-          python3 -c "from urllib.request import urlretrieve; urlretrieve('https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0', 'VST_SDK.zip')"
+          Invoke-WebRequest -Uri https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0 -OutFile VST_SDK.zip
           mkdir VST_SDK
-          tar -xf VST_SDK.zip -C VST_SDK
+          Expand-Archive -Force VST_SDK.zip VST_SDK
           
       - name: Build Standalone Windows
         run: |
