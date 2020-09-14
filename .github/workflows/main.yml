@@ -1,0 +1,46 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ master, ci_test ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-win:
+    runs-on: windows
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.8.0
+        version: '5.3.2'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2013_64'
+    
+      - name: Fetch Static Libs
+        uses: boyeborg/fetch-url-action@v1.1
+        with:
+         url: https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0
+
+      - name: Fetch VST SDK
+        uses: boyeborg/fetch-url-action@v1.1
+        with:
+          url: https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0
+
+      # Runs a set of commands using the runners shell
+      - name: Decompress zips
+        run: |
+          mkdir libs
+          unzip JamTaba-static-libs.zip -d libs
+          mkdir VST_SDK
+          unzip VST_SDK.zip -d VST_SDK
+          
+      - name: Build Standalone Windows
+        run: |
+          qmake.exe $GITHUB_WORKSPACE/PROJECTS/Standalone/Standalone.pro -r -spec win32-g++ CONFIG=release
+          make
+
