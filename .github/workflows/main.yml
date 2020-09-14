@@ -38,6 +38,6 @@ jobs:
       - name: Build Standalone Windows
         run: |
           cd $env:GITHUB_WORKSPACE\PROJECTS\Standalone
-          qmake.exe Standalone.pro -r -spec win32-g++ CONFIG=release
-          make
+          qmake.exe Standalone.pro -r -spec win32-msvc CONFIG=release
+          nmake
 
