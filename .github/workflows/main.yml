@@ -18,7 +18,7 @@ jobs:
         uses: jurplel/install-qt-action@v2.8.0
         with:
           version: '5.3.2'
-          host: 'windows'
+          host: 'windows-latest'
           target: 'desktop'
           arch: 'win64_msvc2013_64'
     
