@@ -21,6 +21,7 @@ jobs:
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2013_64'
+          extra: '--external 7z'
     
       - name: Fetch Static Libs
         uses: boyeborg/fetch-url-action@v1.1
