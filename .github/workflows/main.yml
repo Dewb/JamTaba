@@ -23,13 +23,13 @@ jobs:
     
       - name: Fetch JamTaba static library dependencies
         run: |
-          curl "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=1" -O JamTaba-static-libs.zip
+          curl "https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=1" -o JamTaba-static-libs.zip
           mkdir $env:GITHUB_WORKSPACE/libs
           unzip JamTaba-static-libs.zip -d $env:GITHUB_WORKSPACE/libs
 
       - name: Fetch VST SDK
         run: |
-          curl "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -O VST_SDK.zip
+          curl "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -o VST_SDK.zip
           mkdir $env:GITHUB_WORKSPACE/VST_SDK
           unzip VST_SDK.zip -d $env:GITHUB_WORKSPACE/VST_SDK
           
@@ -86,6 +86,7 @@ jobs:
       - name: Install Visual Studio 2013
         run: |
           choco install visualstudio2013professional
+          refreshenv
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
