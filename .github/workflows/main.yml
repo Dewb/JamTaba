@@ -24,22 +24,16 @@ jobs:
           extra: '--external 7z'
     
       - name: Fetch JamTaba static library dependencies
-        uses: wei/curl@v1.1.1
-        with:
-          args: https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0 -O
+        run: |
+          python3 -c "from urllib.request import urlretrieve; urlretrieve('https://www.dropbox.com/s/qckwsmaqlditwpb/JamTaba-static-libs.zip?dl=0', 'JamTaba-static-libs.zip')"
+          mkdir libs
+          tar -xf JamTaba-static-libs.zip -C libs
 
       - name: Fetch VST SDK
-        uses: wei/curl@v1.1.1
-        with:
-          args: https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0 -O
-
-      # Runs a set of commands using the runners shell
-      - name: Decompress zip archives
         run: |
-          mkdir libs
-          unzip JamTaba-static-libs.zip -d libs
+          python3 -c "from urllib.request import urlretrieve; urlretrieve('https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=0', 'VST_SDK.zip')"
           mkdir VST_SDK
-          unzip VST_SDK.zip -d VST_SDK
+          tar -xf VST_SDK.zip -C VST_SDK
           
       - name: Build Standalone Windows
         run: |
