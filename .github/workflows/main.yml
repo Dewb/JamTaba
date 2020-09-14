@@ -11,8 +11,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      - name: Install Visual Studio 2013
+        run: |
+          choco install visualstudio2013professional
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
@@ -39,5 +42,6 @@ jobs:
         run: |
           cd $env:GITHUB_WORKSPACE\PROJECTS\Standalone
           qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG=release
+          nmake.exe
           
 
