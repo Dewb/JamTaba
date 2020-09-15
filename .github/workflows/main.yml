@@ -21,9 +21,9 @@ jobs:
           target: 'desktop'
           extra: '--external 7z'
           
-      - name: list structure
+      - name: show pri file
         run: |
-          ls -l ${GITHUB_WORKSPACE}/../Qt/5.3/clang_64
+          more ${GITHUB_WORKSPACE}/../Qt/5.3/clang_64/mkspecs/qdevice.pri
               
       - name: Fetch JamTaba static library dependencies
         run: |
