@@ -137,9 +137,11 @@ jobs:
             }
           }
           popd
+          dir env:
           pushd
           cd $env:GITHUB_WORKSPACE\PROJECTS\Standalone
           qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG=release
+          nmake.exe
           popd
 
       #- name: Build VST Plugin
