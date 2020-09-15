@@ -39,8 +39,7 @@ jobs:
           
       - name: Build Standalone MacOS
         run: |
-          pushd
-          cd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
+          pushd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
           qmake Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
           lrelease Standalone.pro
           make -s -j 4
@@ -48,15 +47,13 @@ jobs:
           
       - name: Build AU plugin
         run: |
-          pushd
-          cd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
+          pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
           xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
           popd
           
       - name: Create MacOS installer
         run: |
-          pushd
-          cd ${GITHUB_WORKSPACE}/installers/mac
+          pushd ${GITHUB_WORKSPACE}/installers/mac
           npm install -g appdmg
           cp ${GITHUB_WORKSPACE}/Release/Standalone/JamTaba2.app .
           cp ${GITHUB_WORKSPACE}/Release/AUPlugin/Release/JamTaba.component .
