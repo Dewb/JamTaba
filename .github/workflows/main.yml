@@ -130,9 +130,10 @@ jobs:
       - name: Build Standalone Windows
         shell: cmd
         run: |
-          'c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat'
+          type "c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
+          call "c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"
           path
-          pushd $env:GITHUB_WORKSPACE\PROJECTS\Standalone
+          pushd %GITHUB_WORKSPACE%\PROJECTS\Standalone
           qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG=release
           nmake.exe
           popd
