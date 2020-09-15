@@ -45,7 +45,6 @@ jobs:
       - name: Build Standalone MacOS
         run: |
           pushd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
-          sudo xcode-select --reset
           qmake Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
           lrelease Standalone.pro
           make -s -j 4
