@@ -103,6 +103,10 @@ jobs:
         if: steps.cache-vs2013.outputs.cache-hit != 'true'
         run: |
           choco install visualstudio2013professional
+          
+      - name: list installed files
+        run: |
+          dir c:\program files (x86)
       
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
@@ -138,48 +142,47 @@ jobs:
           pushd
           cd $env:GITHUB_WORKSPACE\PROJECTS\Standalone
           qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG=release
-          nmake.exe
           popd
 
-      - name: Build VST Plugin
-        run: |
-          pushd
-          cd $env:GITHUB_WORKSPACE\PROJECTS\VstPlugin
-          qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG=release
-          popd
+      #- name: Build VST Plugin
+      #  run: |
+      #    pushd
+      #    cd $env:GITHUB_WORKSPACE\PROJECTS\VstPlugin
+      #    qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG=release
+      #    popd
           
-      - name: Build VST Scanner
-        run: |
-          pushd
-          cd $env:GITHUB_WORKSPACE\PROJECTS\VstScanner
-          qmake.exe VstScanner.pro -r -spec win32-msvc2013 CONFIG=release
-          popd
+      #- name: Build VST Scanner
+      #  run: |
+      #    pushd
+      #    cd $env:GITHUB_WORKSPACE\PROJECTS\VstScanner
+      #    qmake.exe VstScanner.pro -r -spec win32-msvc2013 CONFIG=release
+      #    popd
           
-      - name: Create Windows installer (todo)
-        run: |
-          pushd
-          cd ${GITHUB_WORKSPACE}/installers/windows
-          popd
+      #- name: Create Windows installer (todo)
+      #  run: |
+      #    pushd
+      #    cd ${GITHUB_WORKSPACE}/installers/windows
+      #    popd
           
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }} macOS
-          draft: false
-          prerelease: true
+      #- name: Create GitHub Release
+      #  id: create_release
+      #  uses: actions/create-release@v1
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #  with:
+      #    tag_name: ${{ github.ref }}
+      #    release_name: Release ${{ github.ref }} macOS
+      #    draft: false
+      #   prerelease: true
         
-      - name: Upload Windows Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: $env:GITHUB_WORKSPACE\Release\Standalone\Release\JamTaba2.exe
-          asset_name: JamTaba2.exe
-          asset_content_type: application/octet-stream
+      #- name: Upload Windows Release Asset
+      #  id: upload-release-asset 
+      #  uses: actions/upload-release-asset@v1
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #  with:
+      #    upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+      #    asset_path: $env:GITHUB_WORKSPACE\Release\Standalone\Release\JamTaba2.exe
+      #    asset_name: JamTaba2.exe
+      #    asset_content_type: application/octet-stream
           
