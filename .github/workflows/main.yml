@@ -101,11 +101,7 @@ jobs:
         if: steps.cache-vs2013.outputs.cache-hit != 'true'
         run: |
           choco install visualstudio2013professional
-          
-      - name: list installed files
-        run: |
-          dir c:\program files (x86)
-      
+                
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
         with:
