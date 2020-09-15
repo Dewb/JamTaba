@@ -128,19 +128,11 @@ jobs:
           Expand-Archive -Force -Path VST_SDK.zip -DestinationPath $env:GITHUB_WORKSPACE\VST_SDK
           
       - name: Build Standalone Windows
+        shell: cmd
         run: |
-          pushd 'c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC'
-          dir
-          cmd /c "vcvarsall.bat&set" |
-          foreach {
-            if ($_ -match "=") {
-              $v = $_.split("="); set-item -force -path "ENV:\$($v[0])"  -value "$($v[1])"
-            }
-          }
-          popd
-          echo $Env:Path.Split(';')
-          pushd
-          cd $env:GITHUB_WORKSPACE\PROJECTS\Standalone
+          'c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat'
+          path
+          pushd $env:GITHUB_WORKSPACE\PROJECTS\Standalone
           qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG=release
           nmake.exe
           popd
