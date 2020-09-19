@@ -89,7 +89,7 @@ jobs:
           
           
   build-win:
-    runs-on: windows-latest
+    runs-on: windows-2016
 
     steps:
       - uses: actions/checkout@v2
