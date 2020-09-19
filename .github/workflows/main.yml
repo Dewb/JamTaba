@@ -44,9 +44,9 @@ jobs:
           
       - name: Build Standalone MacOS
         run: |
-          pushd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
-          qmake Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
-          lrelease Standalone.pro
+          pushd ${GITHUB_WORKSPACE}/PROJECTS
+          qmake Standalone/Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
+          lrelease Standalone/Standalone.pro
           make -s -j 4
           popd
           
@@ -68,7 +68,7 @@ jobs:
      #     npm install -g appdmg
      #     cp ${GITHUB_WORKSPACE}/Release/Standalone/JamTaba2.app .
      #     cp ${GITHUB_WORKSPACE}/Release/AUPlugin/Release/JamTaba.component .
-     #    appdmg node-appdmg.json JamTaba_2_Installer.dmg
+     #     appdmg node-appdmg.json JamTaba_2_Installer.dmg
      #     popd
              
      # - name: Create GitHub Release
@@ -145,7 +145,6 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS
           qmake.exe Standalone\Standalone.pro -r -spec win32-msvc2013 CONFIG=release
-          cd Standalone
           nmake.exe
           popd
           
@@ -160,7 +159,6 @@ jobs:
       #    pushd
       #    cd $env:GITHUB_WORKSPACE\PROJECTS
       #    qmake.exe VstPlugin\VstPlugin.pro -r -spec win32-msvc2013 CONFIG=release
-      #    cd VstPlugin
       #    nmake.exe 
       #    popd
           
@@ -169,7 +167,6 @@ jobs:
       #    pushd
       #    cd $env:GITHUB_WORKSPACE\PROJECTS
       #    qmake.exe VstScanner\VstScanner.pro -r -spec win32-msvc2013 CONFIG=release
-      #    cd VstScanner
       #    nmake.exe
       #    popd
           
