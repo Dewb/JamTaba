@@ -137,9 +137,10 @@ jobs:
           echo ::set-env name=LIB::C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib;%LIB%
           echo ::set-env name=INCLUDE::C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include;%INCLUDE%
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
-          pushd %GITHUB_WORKSPACE%\PROJECTS\Standalone
-          qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG=release
-          nmake.exe
+          pushd %GITHUB_WORKSPACE%\PROJECTS
+          rem qmake.exe Standalone\Standalone.pro -r -spec win32-msvc2013 CONFIG=release
+          rem cd Standalone
+          rem nmake.exe
           popd
 
       #- name: Build VST Plugin
