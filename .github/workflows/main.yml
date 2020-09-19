@@ -21,7 +21,7 @@ jobs:
           target: 'desktop'
           extra: '--external 7z'
           
-      - name: Replace qdevice.pri file
+      - name: Replace qdevice.pri file to remove 10.8 SDK requirement
         run: |
           echo "!host_build:QMAKE_MAC_SDK = macosx" > ${GITHUB_WORKSPACE}/../Qt/5.3/clang_64/mkspecs/qdevice.pri
           echo "GCC_MACHINE_DUMP = x86_64-apple-darwin12.5.0" >> ${GITHUB_WORKSPACE}/../Qt/5.3/clang_64/mkspecs/qdevice.pri
@@ -50,43 +50,49 @@ jobs:
           make -s -j 4
           popd
           
-      - name: Build AU plugin
-        run: |
-          pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
-          xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
-          popd
-          
-      - name: Create MacOS installer
-        run: |
-          pushd ${GITHUB_WORKSPACE}/installers/mac
-          npm install -g appdmg
-          cp ${GITHUB_WORKSPACE}/Release/Standalone/JamTaba2.app .
-          cp ${GITHUB_WORKSPACE}/Release/AUPlugin/Release/JamTaba.component .
-          appdmg node-appdmg.json JamTaba_2_Installer.dmg
-          popd
-          
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }} macOS
-          draft: false
-          prerelease: true
+          name: macOS Standalone 64-bit
+          path: ${GITHUB_WORKSPACE}/Release/Standalone/Jamtaba2.app
+          
+     # - name: Build AU plugin
+     #  run: |
+     #    pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
+     #    xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
+     #    popd
+          
+     # - name: Create MacOS installer
+     #   run: |
+     #     pushd ${GITHUB_WORKSPACE}/installers/mac
+     #     npm install -g appdmg
+     #     cp ${GITHUB_WORKSPACE}/Release/Standalone/JamTaba2.app .
+     #     cp ${GITHUB_WORKSPACE}/Release/AUPlugin/Release/JamTaba.component .
+     #    appdmg node-appdmg.json JamTaba_2_Installer.dmg
+     #     popd
+             
+     # - name: Create GitHub Release
+     #   id: create_release
+     #   uses: actions/create-release@v1
+     #   env:
+     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     #   with:
+     #     tag_name: ${{ github.ref }}
+     #     release_name: Release ${{ github.ref }} macOS
+     #     draft: false
+     #     prerelease: true
         
-      - name: Upload MacOS Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ${GITHUB_WORKSPACE}/installers/mac/JamTaba_2_Installer.dmg
-          asset_name: JamTaba_2_Installer.dmg
-          asset_content_type: application/octet-stream
-          
+     # - name: Upload MacOS Release Asset
+     #   id: upload-release-asset 
+     #   uses: actions/upload-release-asset@v1
+     #   env:
+     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     #   with:
+     #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+     #     asset_path: ${GITHUB_WORKSPACE}/installers/mac/JamTaba_2_Installer.dmg
+     #     asset_name: JamTaba_2_Installer.dmg
+     #     asset_content_type: application/octet-stream
+     #     
           
   build-win:
     runs-on: windows-2016
@@ -138,23 +144,33 @@ jobs:
           echo ::set-env name=INCLUDE::C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include;%INCLUDE%
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS
-          rem qmake.exe Standalone\Standalone.pro -r -spec win32-msvc2013 CONFIG=release
-          rem cd Standalone
-          rem nmake.exe
+          qmake.exe Standalone\Standalone.pro -r -spec win32-msvc2013 CONFIG=release
+          cd Standalone
+          nmake.exe
           popd
+          
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Windows Standalone 64-bit
+          path: ${GITHUB_WORKSPACE}\build-64bit\Release\Standalone\release\Jamtaba2.exe
 
       #- name: Build VST Plugin
       #  run: |
       #    pushd
-      #    cd $env:GITHUB_WORKSPACE\PROJECTS\VstPlugin
-      #    qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG=release
+      #    cd $env:GITHUB_WORKSPACE\PROJECTS
+      #    qmake.exe VstPlugin\VstPlugin.pro -r -spec win32-msvc2013 CONFIG=release
+      #    cd VstPlugin
+      #    nmake.exe 
       #    popd
           
       #- name: Build VST Scanner
       #  run: |
       #    pushd
-      #    cd $env:GITHUB_WORKSPACE\PROJECTS\VstScanner
-      #    qmake.exe VstScanner.pro -r -spec win32-msvc2013 CONFIG=release
+      #    cd $env:GITHUB_WORKSPACE\PROJECTS
+      #    qmake.exe VstScanner\VstScanner.pro -r -spec win32-msvc2013 CONFIG=release
+      #    cd VstScanner
+      #    nmake.exe
       #    popd
           
       #- name: Create Windows installer (todo)
@@ -181,7 +197,7 @@ jobs:
       #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #  with:
       #    upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-      #    asset_path: $env:GITHUB_WORKSPACE\Release\Standalone\Release\JamTaba2.exe
+      #    asset_path: $env:GITHUB_WORKSPACE\build-64bit\Release\Standalone\Release\JamTaba2.exe
       #    asset_name: JamTaba2.exe
       #    asset_content_type: application/octet-stream
           
