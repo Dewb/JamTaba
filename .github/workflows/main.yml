@@ -100,15 +100,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache Visual Studio 2013
-        id: cache-vs2013
-        uses: actions/cache@v2
-        with: 
-          path: C:\Program Files (x86)\Microsoft Visual Studio 12.0
-          key: ${{ runner.os }}-vs2013
+     # - name: Cache Visual Studio 2013
+     #   id: cache-vs2013
+     #   uses: actions/cache@v2
+     #   with: 
+     #     path: C:\Program Files (x86)\Microsoft Visual Studio 12.0
+     #     key: ${{ runner.os }}-vs2013
 
       - name: Install Visual Studio 2013
-        if: steps.cache-vs2013.outputs.cache-hit != 'true'
+     #   if: steps.cache-vs2013.outputs.cache-hit != 'true'
         run: |
           choco install visualstudio2013professional
                 
