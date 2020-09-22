@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: macOS Standalone 64-bit
-          path: ${GITHUB_WORKSPACE}/Release/Standalone/Jamtaba2.app
+          path: ${GITHUB_WORKSPACE}/*
           
      # - name: Build AU plugin
      #  run: |
@@ -148,7 +148,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Windows Standalone 64-bit
-          path: ${GITHUB_WORKSPACE}\build-64bit\Release\Standalone\release\Jamtaba2.exe
+          path: ${GITHUB_WORKSPACE}\*
 
       #- name: Build VST Plugin
       #  run: |
