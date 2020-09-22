@@ -47,12 +47,13 @@ jobs:
           lrelease Standalone/Standalone.pro
           make -s -j 4
           popd
+          ls -ls > ${GITHUB_WORKSPACE}/list.txt
           
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: macOS Standalone 64-bit
-          path: ${GITHUB_WORKSPACE}/*
+          path: ${GITHUB_WORKSPACE}/list.txt
           
      # - name: Build AU plugin
      #  run: |
