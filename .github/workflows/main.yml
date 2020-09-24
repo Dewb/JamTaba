@@ -46,8 +46,8 @@ jobs:
           qmake Standalone/Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
           lrelease Standalone/Standalone.pro
           make -s -j 4
-          popd
           ls -ls > ${GITHUB_WORKSPACE}/list.txt
+          popd
           
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
@@ -143,13 +143,14 @@ jobs:
           pushd %GITHUB_WORKSPACE%\PROJECTS
           qmake.exe Standalone\Standalone.pro -r -spec win32-msvc2013 CONFIG+=release
           nmake.exe
+          dir /s > %GITHUB_WORKSPACE%\list.txt
           popd
           
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Windows Standalone 64-bit
-          path: ${GITHUB_WORKSPACE}\*
+          path: list.txt
 
       #- name: Build VST Plugin
       #  run: |
