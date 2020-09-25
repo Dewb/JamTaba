@@ -42,18 +42,18 @@ jobs:
           
       - name: Build Standalone MacOS
         run: |
-          pushd ${GITHUB_WORKSPACE}/PROJECTS
-          qmake Standalone/Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
-          lrelease Standalone/Standalone.pro
+          pushd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
+          qmake Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
+          lrelease Standalone.pro
           make -s -j 4
-          ls -ls > ${GITHUB_WORKSPACE}/list.txt
+          ls -lr > ${GITHUB_WORKSPACE}/list.txt
           popd
           
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: macOS Standalone 64-bit
-          path: list.txt
+          path: PROJECTS/Standalone/Jamtaba2.app
           
      # - name: Build AU plugin
      #  run: |
@@ -150,7 +150,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Windows Standalone 64-bit
-          path: list.txt
+          path: PROJECTS/release/JamTaba2.exe
 
       #- name: Build VST Plugin
       #  run: |
