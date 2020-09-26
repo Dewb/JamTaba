@@ -44,18 +44,18 @@ jobs:
           macdeployqt Jamtaba2.app
           popd          
           
-      - name: Build AU plugin
-        run: |
-         pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
-         xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
-         popd
+     # - name: Build AU plugin
+     #   run: |
+     #    pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
+     #    xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
+     #    popd
           
       - name: Create MacOS installer
         run: |
           pushd ${GITHUB_WORKSPACE}/installers/mac
           npm install -g appdmg
           cp ${GITHUB_WORKSPACE}/PROJECTS/Standalone/JamTaba2.app .
-          cp ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin/Release/JamTaba.component .
+          # cp ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin/Release/JamTaba.component .
           appdmg node-appdmg.json JamTaba_2_Installer.dmg
           popd
              
@@ -128,12 +128,6 @@ jobs:
       - name: Build Standalone Windows
         shell: cmd
         run: |
-          echo ::add-path::C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE             
-          echo ::add-path::C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\BIN
-          echo ::set-env name=LIB::C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\LIB;%LIB%
-          echo ::set-env name=LIB::C:\Program Files (x86)\Microsoft SDKs\Windows\v6.0A\Lib;%LIB%
-          echo ::set-env name=LIB::C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib;%LIB%
-          echo ::set-env name=INCLUDE::C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include;%INCLUDE%
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS\Standalone
           qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG+=release
@@ -143,28 +137,32 @@ jobs:
           copy release\JamTaba2.exe artifact
           popd
           
+      - name: Build VST Plugin
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
+          pushd
+          cd $env:GITHUB_WORKSPACE\PROJECTS\VstPlugin
+          qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG+=release
+          nmake.exe 
+          copy release\JamtabaVST2.dll %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
+          popd
+          
+      - name: Build VST Scanner
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
+          pushd
+          cd $env:GITHUB_WORKSPACE\PROJECTS\VstScanner
+          qmake.exe VstScanner.pro -r -spec win32-msvc2013 CONFIG+=release
+          nmake.exe
+          copy release\VstScanner.exe %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
+          popd
+          
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Windows Standalone 64-bit
           path: PROJECTS/Standalone/artifact
 
-      - name: Build VST Plugin
-        run: |
-          pushd
-          cd $env:GITHUB_WORKSPACE\PROJECTS\VstPlugin
-          qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG+=release
-          nmake.exe 
-          popd
-          
-      - name: Build VST Scanner
-        run: |
-          pushd
-          cd $env:GITHUB_WORKSPACE\PROJECTS\VstScanner
-          qmake.exe VstScanner.pro -r -spec win32-msvc2013 CONFIG+=release
-          nmake.exe
-          popd
-          
       #- name: Create Windows installer (todo)
       #  run: |
       #    pushd
