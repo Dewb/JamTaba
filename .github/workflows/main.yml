@@ -20,11 +20,6 @@ jobs:
           host: 'mac'
           target: 'desktop'
           extra: '--external 7z'
-          
-     # - name: Replace qdevice.pri file to remove 10.8 SDK requirement
-     #   run: |
-     #     echo "!host_build:QMAKE_MAC_SDK = macosx" > ${GITHUB_WORKSPACE}/../Qt/5.5/clang_64/mkspecs/qdevice.pri
-     #     echo "GCC_MACHINE_DUMP = x86_64-apple-darwin12.5.0" >> ${GITHUB_WORKSPACE}/../Qt/5.5/clang_64/mkspecs/qdevice.pri
               
       - name: Fetch JamTaba static library dependencies
         run: |
@@ -47,31 +42,29 @@ jobs:
           lrelease Standalone.pro
           make -s -j 4
           macdeployqt Jamtaba2.app
-          mkdir artifact
-          mv Jamtaba2.app artifact
-          popd
+          popd          
           
+      - name: Build AU plugin
+        run: |
+         pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
+         xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
+         popd
+          
+      - name: Create MacOS installer
+        run: |
+          pushd ${GITHUB_WORKSPACE}/installers/mac
+          npm install -g appdmg
+          cp ${GITHUB_WORKSPACE}/PROJECTS/Standalone/JamTaba2.app .
+          cp ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin/Release/JamTaba.component .
+          appdmg node-appdmg.json JamTaba_2_Installer.dmg
+          popd
+             
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: macOS Standalone 64-bit
-          path: PROJECTS/Standalone/artifact
-          
-     # - name: Build AU plugin
-     #  run: |
-     #    pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
-     #    xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
-     #    popd
-          
-     # - name: Create MacOS installer
-     #   run: |
-     #     pushd ${GITHUB_WORKSPACE}/installers/mac
-     #     npm install -g appdmg
-     #     cp ${GITHUB_WORKSPACE}/Release/Standalone/JamTaba2.app .
-     #     cp ${GITHUB_WORKSPACE}/Release/AUPlugin/Release/JamTaba.component .
-     #     appdmg node-appdmg.json JamTaba_2_Installer.dmg
-     #     popd
-             
+          path: PROJECTS/installers/mac/JamTaba_2_Installer.dmg
+        
      # - name: Create GitHub Release
      #   id: create_release
      #   uses: actions/create-release@v1
@@ -147,6 +140,7 @@ jobs:
           nmake.exe
           mkdir artifact
           windeployqt --dir artifact release\JamTaba2.exe
+          copy release\JamTaba2.exe artifact
           popd
           
       - name: Upload Build Artifacts
@@ -155,21 +149,21 @@ jobs:
           name: Windows Standalone 64-bit
           path: PROJECTS/Standalone/artifact
 
-      #- name: Build VST Plugin
-      #  run: |
-      #    pushd
-      #    cd $env:GITHUB_WORKSPACE\PROJECTS
-      #    qmake.exe VstPlugin\VstPlugin.pro -r -spec win32-msvc2013 CONFIG=release
-      #    nmake.exe 
-      #    popd
+      - name: Build VST Plugin
+        run: |
+          pushd
+          cd $env:GITHUB_WORKSPACE\PROJECTS\VstPlugin
+          qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG+=release
+          nmake.exe 
+          popd
           
-      #- name: Build VST Scanner
-      #  run: |
-      #    pushd
-      #    cd $env:GITHUB_WORKSPACE\PROJECTS
-      #    qmake.exe VstScanner\VstScanner.pro -r -spec win32-msvc2013 CONFIG=release
-      #    nmake.exe
-      #    popd
+      - name: Build VST Scanner
+        run: |
+          pushd
+          cd $env:GITHUB_WORKSPACE\PROJECTS\VstScanner
+          qmake.exe VstScanner.pro -r -spec win32-msvc2013 CONFIG+=release
+          nmake.exe
+          popd
           
       #- name: Create Windows installer (todo)
       #  run: |
