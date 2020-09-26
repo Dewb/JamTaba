@@ -46,14 +46,16 @@ jobs:
           qmake Standalone.pro -r -spec macx-clang -config release CONFIG+=x86_64
           lrelease Standalone.pro
           make -s -j 4
-          ls -lr > ${GITHUB_WORKSPACE}/list.txt
+          macdeployqt Jamtaba2.app
+          mkdir artifact
+          mv Jamtaba2.app artifact
           popd
           
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: macOS Standalone 64-bit
-          path: PROJECTS/Standalone/Jamtaba2.app
+          path: PROJECTS/Standalone/artifact
           
      # - name: Build AU plugin
      #  run: |
@@ -143,14 +145,15 @@ jobs:
           pushd %GITHUB_WORKSPACE%\PROJECTS
           qmake.exe Standalone\Standalone.pro -r -spec win32-msvc2013 CONFIG+=release
           nmake.exe
-          dir /s > %GITHUB_WORKSPACE%\list.txt
+          mkdir artifact
+          windeployqt --dir artifact JamTaba2.exe
           popd
           
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Windows Standalone 64-bit
-          path: PROJECTS/release/JamTaba2.exe
+          path: PROJECTS/release/artifact
 
       #- name: Build VST Plugin
       #  run: |
