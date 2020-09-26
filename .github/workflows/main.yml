@@ -142,18 +142,18 @@ jobs:
           echo ::set-env name=LIB::C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib;%LIB%
           echo ::set-env name=INCLUDE::C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include;%INCLUDE%
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
-          pushd %GITHUB_WORKSPACE%\PROJECTS
-          qmake.exe Standalone\Standalone.pro -r -spec win32-msvc2013 CONFIG+=release
+          pushd %GITHUB_WORKSPACE%\PROJECTS\Standalone
+          qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG+=release
           nmake.exe
           mkdir artifact
-          windeployqt --dir artifact JamTaba2.exe
+          windeployqt --dir artifact release\JamTaba2.exe
           popd
           
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Windows Standalone 64-bit
-          path: PROJECTS/release/artifact
+          path: PROJECTS/Standalone/artifact
 
       #- name: Build VST Plugin
       #  run: |
