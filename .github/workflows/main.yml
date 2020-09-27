@@ -54,8 +54,8 @@ jobs:
         run: |
           pushd ${GITHUB_WORKSPACE}/installers/mac
           npm install -g appdmg
-          cp ${GITHUB_WORKSPACE}/PROJECTS/Standalone/JamTaba2.app .
-          # cp ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin/Release/JamTaba.component .
+          mv ${GITHUB_WORKSPACE}/PROJECTS/Standalone/JamTaba2.app .
+          # mv ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin/Release/JamTaba.component .
           appdmg node-appdmg.json JamTaba_2_Installer.dmg
           popd
              
@@ -138,6 +138,7 @@ jobs:
           popd
           
       - name: Build VST Plugin
+        shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd
@@ -148,6 +149,7 @@ jobs:
           popd
           
       - name: Build VST Scanner
+        shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd
