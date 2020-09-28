@@ -47,7 +47,8 @@ jobs:
       - name: Build AU plugin
         run: |
          pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
-         xcodebuild -project JamTaba.xcodeproj -scheme JamTaba clean build
+         #xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target CocoaUI clean build
+         xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target JamTaba clean build
          popd
           
       - name: Create MacOS installer
@@ -192,7 +193,7 @@ jobs:
       #    asset_content_type: application/octet-stream
           
   build-linux:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
