@@ -48,7 +48,7 @@ jobs:
         run: |
          pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
          #xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target CocoaUI clean build
-         xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target JamTaba clean build
+         xcodebuild -project JamTaba.xcodeproj -target JamTaba clean build
          popd
           
       - name: Create MacOS installer
@@ -215,6 +215,10 @@ jobs:
         run: |
           curl -L "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -o VST_SDK.zip
           unzip VST_SDK.zip -d ${GITHUB_WORKSPACE}
+          
+      - name: Install Linux package dependencies
+        run: |
+          sudo apt-get install libasound2-dev
           
       - name: Build Standalone Linux
         run: |
