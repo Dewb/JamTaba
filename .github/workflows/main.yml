@@ -44,12 +44,12 @@ jobs:
           macdeployqt Jamtaba2.app
           popd          
           
-      - name: Build AU plugin
-        run: |
-         pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
-         #xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target CocoaUI clean build
-         xcodebuild -project JamTaba.xcodeproj -target JamTaba clean build
-         popd
+      # - name: Build AU plugin
+      #  run: |
+      #   pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
+      #   #xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target CocoaUI clean build
+      #   xcodebuild -project JamTaba.xcodeproj -target JamTaba clean build
+      #   popd
           
       - name: Create MacOS installer
         run: |
@@ -57,6 +57,7 @@ jobs:
           npm install -g appdmg
           mv ${GITHUB_WORKSPACE}/PROJECTS/Standalone/JamTaba2.app .
           # mv ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin/Release/JamTaba.component .
+          touch JamTaba.component
           appdmg node-appdmg.json JamTaba_2_Installer.dmg
           popd
              
@@ -241,7 +242,8 @@ jobs:
           curl -L "https://github.com/megastep/makeself/releases/download/release-2.4.2/makeself-2.4.2.run" -O
           chmod a+x makeself-2.4.2.run
           ./makeself-2.4.2.run
-          cp -R /home/makeself/* /usr/bin
+          cp makeself-2.4.2/*.sh /usr/bin
+          mkdir ~/Desktop
           ./build_installer.sh ${QT5_DIR} ${QT5_DIR}/lib
           popd
              
