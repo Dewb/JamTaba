@@ -110,7 +110,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
         with:
-          version: '5.6'
+          version: '5.7'
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2013_64'
@@ -126,17 +126,17 @@ jobs:
           Invoke-WebRequest -Uri "https://www.dropbox.com/s/9lxowvn7k3bfkf1/VST_SDK.zip?dl=1" -OutFile VST_SDK.zip
           Expand-Archive -Force -Path VST_SDK.zip -DestinationPath $env:GITHUB_WORKSPACE
 
-     # - name: Build Standalone Windows
-     #   shell: cmd
-     #   run: |
-     #     call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
-     #     pushd %GITHUB_WORKSPACE%\PROJECTS\Standalone
-     #     qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG+=release
-     #     nmake.exe
-     #     mkdir artifact
-     #     windeployqt --dir artifact release\JamTaba2.exe
-     #     copy release\JamTaba2.exe artifact
-     #     popd
+      - name: Build Standalone Windows
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
+          pushd %GITHUB_WORKSPACE%\PROJECTS\Standalone
+          qmake.exe Standalone.pro -r -spec win32-msvc2013 CONFIG+=release
+          nmake.exe
+          mkdir artifact
+          windeployqt --dir artifact release\JamTaba2.exe
+          copy release\JamTaba2.exe artifact
+          popd
           
       - name: Build VST Plugin
         shell: cmd
@@ -145,7 +145,7 @@ jobs:
           pushd %GITHUB_WORKSPACE%\PROJECTS\VstPlugin
           qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG+=release
           nmake.exe 
-          rem copy release\JamtabaVST2.dll %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
+          copy release\JamtabaVST2.dll %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
           popd
           
       - name: Build VST Scanner
