@@ -220,31 +220,36 @@ jobs:
         run: |
           sudo apt-get install libasound2-dev
           
-      - name: Build Standalone Linux
-        run: |
-          pushd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
-          qmake Standalone.pro -config release
-          lrelease Standalone.pro
-          make -s -Wno-reorder -j 4
-          popd          
+     # - name: Build Standalone Linux
+     #   run: |
+     #     pushd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
+     #     qmake Standalone.pro -config release
+     #     lrelease Standalone.pro
+     #     make -s -Wno-reorder -j 4
+     #     popd          
           
-      - name: Build VST Scanner Linux
-        run: |
-          pushd ${GITHUB_WORKSPACE}/PROJECTS/VstScanner
-          qmake VstScanner.pro -config release
-          make -s -Wno-reorder -j 4
-          popd
+     # - name: Build VST Scanner Linux
+     #   run: |
+     #     pushd ${GITHUB_WORKSPACE}/PROJECTS/VstScanner
+     #     qmake VstScanner.pro -config release
+     #     make -s -Wno-reorder -j 4
+     #     popd
           
-      - name: Create Linux installer
+      - name: Build Linux Projects and Create Installer
         run: |
           pushd ${GITHUB_WORKSPACE}/installers/linux
+          curl -L "https://github.com/megastep/makeself/releases/download/release-2.4.2/makeself-2.4.2.run" -O
+          chmod a+x makeself-2.4.2.run
+          ./makeself-2.4.2.run
+          cp -R /home/makeself/* /usr/bin
+          ./build_installer.sh ${QT5_DIR} ${QT5_DIR}/lib
           popd
              
-     # - name: Upload Build Artifacts
-     #   uses: actions/upload-artifact@v2
-     #   with:
-     #     name: Linux Standalone 64-bit
-     #     path: PROJECTS/installers/mac/JamTaba_2_Installer.dmg
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Linux Installer
+          path: ~/Desktop
         
      # - name: Create GitHub Release
      #   id: create_release
