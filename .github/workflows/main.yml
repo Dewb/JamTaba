@@ -155,6 +155,7 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS\VstScanner
           qmake.exe VstScanner.pro -r -spec win32-msvc2013 CONFIG+=release
+          LIB=%LIB%;%Qt5_Dir%\lib
           nmake.exe
           copy release\VstScanner.exe %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
           popd
@@ -242,7 +243,7 @@ jobs:
           curl -L "https://github.com/megastep/makeself/releases/download/release-2.4.2/makeself-2.4.2.run" -O
           chmod a+x makeself-2.4.2.run
           ./makeself-2.4.2.run
-          cp makeself-2.4.2/*.sh /usr/bin
+          export PATH=${PATH}:${PWD}/makeself-2.4.2
           mkdir ~/Desktop
           ./build_installer.sh ${QT5_DIR} ${QT5_DIR}/lib
           popd
