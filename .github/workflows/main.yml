@@ -66,29 +66,6 @@ jobs:
         with:
           name: macOS Standalone 64-bit
           path: ~/JamTaba_2_Installer.dmg
-        
-     # - name: Create GitHub Release
-     #   id: create_release
-     #   uses: actions/create-release@v1
-     #   env:
-     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     #   with:
-     #     tag_name: ${{ github.ref }}
-     #     release_name: Release ${{ github.ref }} macOS
-     #     draft: false
-     #     prerelease: true
-        
-     # - name: Upload MacOS Release Asset
-     #   id: upload-release-asset 
-     #   uses: actions/upload-release-asset@v1
-     #   env:
-     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     #   with:
-     #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-     #     asset_path: ${GITHUB_WORKSPACE}/installers/mac/JamTaba_2_Installer.dmg
-     #     asset_name: JamTaba_2_Installer.dmg
-     #     asset_content_type: application/octet-stream
-     #     
           
   build-win:
     runs-on: windows-2016
@@ -145,6 +122,7 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS\VstPlugin
           qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG+=release
+          LIB=%LIB%;%Qt5_Dir%\lib
           nmake.exe 
           copy release\JamtabaVST2.dll %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
           popd
@@ -155,7 +133,6 @@ jobs:
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS\VstScanner
           qmake.exe VstScanner.pro -r -spec win32-msvc2013 CONFIG+=release
-          LIB=%LIB%;%Qt5_Dir%\lib
           nmake.exe
           copy release\VstScanner.exe %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
           popd
@@ -166,33 +143,6 @@ jobs:
           name: Windows Standalone 64-bit
           path: PROJECTS/Standalone/artifact
 
-      #- name: Create Windows installer (todo)
-      #  run: |
-      #    pushd
-      #    cd ${GITHUB_WORKSPACE}/installers/windows
-      #    popd
-          
-      #- name: Create GitHub Release
-      #  id: create_release
-      #  uses: actions/create-release@v1
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #  with:
-      #    tag_name: ${{ github.ref }}
-      #    release_name: Release ${{ github.ref }} macOS
-      #    draft: false
-      #   prerelease: true
-        
-      #- name: Upload Windows Release Asset
-      #  id: upload-release-asset 
-      #  uses: actions/upload-release-asset@v1
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #  with:
-      #    upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-      #    asset_path: $env:GITHUB_WORKSPACE\build-64bit\Release\Standalone\Release\JamTaba2.exe
-      #    asset_name: JamTaba2.exe
-      #    asset_content_type: application/octet-stream
           
   build-linux:
     runs-on: ubuntu-latest
@@ -245,6 +195,7 @@ jobs:
           ./makeself-2.4.2.run
           export PATH=${PATH}:${PWD}/makeself-2.4.2
           mkdir ~/Desktop
+          touch ${Qt5_DIR}/lib/qt5/plugins/platforms/libqxcb.so
           source ./build_installer.sh "${Qt5_DIR}" "${Qt5_DIR}/lib"
           popd
              
@@ -254,25 +205,4 @@ jobs:
           name: Linux Installer
           path: ~/Desktop
         
-     # - name: Create GitHub Release
-     #   id: create_release
-     #   uses: actions/create-release@v1
-     #   env:
-     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     #   with:
-     #     tag_name: ${{ github.ref }}
-     #     release_name: Release ${{ github.ref }} macOS
-     #     draft: false
-     #     prerelease: true
-        
-     # - name: Upload MacOS Release Asset
-     #   id: upload-release-asset 
-     #   uses: actions/upload-release-asset@v1
-     #   env:
-     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     #   with:
-     #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-     #     asset_path: ${GITHUB_WORKSPACE}/installers/mac/JamTaba_2_Installer.dmg
-     #     asset_name: JamTaba_2_Installer.dmg
-     #     asset_content_type: application/octet-stream
-     #     
+ 
