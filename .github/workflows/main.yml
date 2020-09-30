@@ -245,7 +245,7 @@ jobs:
           ./makeself-2.4.2.run
           export PATH=${PATH}:${PWD}/makeself-2.4.2
           mkdir ~/Desktop
-          source ./build_installer.sh "${QT5_DIR}" "${QT5_DIR}/lib"
+          source ./build_installer.sh "${Qt5_DIR}" "${Qt5_DIR}/lib"
           popd
              
       - name: Upload Build Artifacts
