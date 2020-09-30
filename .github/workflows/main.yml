@@ -157,6 +157,7 @@ jobs:
           host: 'linux'
           target: 'desktop'
           extra: '--external 7z'
+          modules: 'all'
               
       - name: Fetch JamTaba static library dependencies
         run: |
@@ -195,7 +196,6 @@ jobs:
           ./makeself-2.4.2.run
           export PATH=${PATH}:${PWD}/makeself-2.4.2
           mkdir ~/Desktop
-          touch ${Qt5_DIR}/lib/qt5/plugins/platforms/libqxcb.so
           source ./build_installer.sh "${Qt5_DIR}" "${Qt5_DIR}/lib"
           popd
              
