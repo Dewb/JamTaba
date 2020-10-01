@@ -121,8 +121,8 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS\VstPlugin
+          LIB=%LIB%;"%Qt5_Dir%\lib"
           qmake.exe VstPlugin.pro -r -spec win32-msvc2013 CONFIG+=release
-          LIB=%LIB%;%Qt5_Dir%\lib
           nmake.exe 
           copy release\JamtabaVST2.dll %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
           popd
@@ -157,7 +157,6 @@ jobs:
           host: 'linux'
           target: 'desktop'
           extra: '--external 7z'
-          modules: 'all'
               
       - name: Fetch JamTaba static library dependencies
         run: |
@@ -172,21 +171,6 @@ jobs:
       - name: Install Linux package dependencies
         run: |
           sudo apt-get install libasound2-dev
-          
-     # - name: Build Standalone Linux
-     #   run: |
-     #     pushd ${GITHUB_WORKSPACE}/PROJECTS/Standalone
-     #     qmake Standalone.pro -config release
-     #     lrelease Standalone.pro
-     #     make -s -Wno-reorder -j 4
-     #     popd          
-          
-     # - name: Build VST Scanner Linux
-     #   run: |
-     #     pushd ${GITHUB_WORKSPACE}/PROJECTS/VstScanner
-     #     qmake VstScanner.pro -config release
-     #     make -s -Wno-reorder -j 4
-     #     popd
           
       - name: Build Linux Projects and Create Installer
         run: |
