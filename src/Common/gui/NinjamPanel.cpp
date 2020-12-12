@@ -33,6 +33,11 @@ NinjamPanel::NinjamPanel(TextEditorModifier *bpiComboModifier, TextEditorModifie
     qCDebug(jtNinjamGUI) << "NinjamPanel::NinjamPanel done";
 }
 
+void NinjamPanel::hideMidiSyncCheckBox()
+{
+    ui->checkboxSync->hide();
+}
+
 void NinjamPanel::setMetronomeFloatingWindow(IntervalProgressWindow *floatingWindow)
 {
     metronomeFloatingWindow = floatingWindow;
@@ -141,6 +146,7 @@ void NinjamPanel::setupSignals()
     connect(ui->comboBpi, SIGNAL(activated(QString)), this, SLOT(handleBpiComboActication(QString)));
     connect(ui->comboBpm, SIGNAL(activated(QString)), this, SLOT(handleBpmComboActication(QString)));
 
+    connect(ui->checkboxSync, SIGNAL(clicked(bool)), this, SIGNAL(midiSyncChanged(bool)));
 }
 
 void NinjamPanel::handleBpiComboActication(const QString &newBpi)

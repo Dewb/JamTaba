@@ -29,6 +29,8 @@ public:
     void uncheckHostSyncButton(); // used to uncheck the button when the sync with host fail (different BPMs)
     bool hostSyncButtonIsChecked() const;
 
+    void hideMidiSyncCheckBox();  // used to show the sync checkbox in standalone only
+
     void setBpiComboText(const QString &);
     void setBpmComboText(const QString &);
 
@@ -71,6 +73,7 @@ signals:
     void accentsBeatsChanged(const QList<int> &);
     void hostSyncStateChanged(bool syncWithHost);
     void intervalShapeChanged(int newShape);
+    void midiSyncChanged(bool syncOn);
 
 protected:
     void changeEvent(QEvent *) override;
