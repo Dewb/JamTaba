@@ -109,7 +109,6 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS\Standalone
-          QMAKE_MSC_VER=1800
           qmake.exe Standalone.pro -r -spec win32-msvc CONFIG+=release
           nmake.exe
           mkdir artifact
@@ -134,10 +133,9 @@ jobs:
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
           pushd %GITHUB_WORKSPACE%\PROJECTS\VstScanner
-          QMAKE_MSC_VER=1800
           qmake.exe VstScanner.pro -r -spec win32-msvc CONFIG+=release
           nmake.exe
-          copy release\VstScanner.exe %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
+          copy %GITHUB_WORKSPACE%\PROJECTS\Standalone\release\VstScanner.exe %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
           popd
           
       - name: Upload Build Artifacts
