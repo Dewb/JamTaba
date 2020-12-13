@@ -117,17 +117,17 @@ jobs:
           copy release\JamTaba2.exe artifact
           popd
           
-      - name: Build VST Plugin
-        shell: cmd
-        run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
-          pushd %GITHUB_WORKSPACE%\PROJECTS\VstPlugin
-          LIB=%LIB%;"%Qt5_Dir%\lib"
-          QMAKE_MSC_VER=1800
-          qmake.exe VstPlugin.pro -r -spec win32-msvc CONFIG+=release
-          nmake.exe 
-          copy release\JamtabaVST2.dll %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
-          popd
+      # - name: Build VST Plugin
+      #   shell: cmd
+      #   run: |
+      #     call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
+      #     pushd %GITHUB_WORKSPACE%\PROJECTS\VstPlugin
+      #     LIB=%LIB%;"%Qt5_Dir%\lib"
+      #     QMAKE_MSC_VER=1800
+      #     qmake.exe VstPlugin.pro -r -spec win32-msvc CONFIG+=release
+      #     nmake.exe 
+      #     copy release\JamtabaVST2.dll %GITHUB_WORKSPACE%\PROJECTS\Standalone\artifact
+      #     popd
           
       - name: Build VST Scanner
         shell: cmd
@@ -189,6 +189,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Linux Installer
-          path: ~/Desktop
-        
- 
+          path: ~/Desktop/*.run
