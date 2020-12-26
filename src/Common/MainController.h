@@ -211,9 +211,10 @@ public:
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,
                          QString audioInputDevice, QString audioOutputDevice,
                          const QList<bool> &midiInputStatus, const QList<bool> &syncOutputsStatus);
-
     void storeIOSettings(int firstIn, int lastIn, int firstOut, int lastOut,
                          QString audioInputDevice, QString audioOutputDevice);
+    void storeMidiSettings(const QList<bool> &midiInputsStatus);
+    void storeSyncSettings(const QList<bool> &midiOutputsStatus);
 
     void storeMultiTrackRecordingStatus(bool savingMultiTracks);
     bool isMultiTrackRecordingActivated() const;

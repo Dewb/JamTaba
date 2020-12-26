@@ -47,6 +47,16 @@ void PreferencesDialogStandalone::notifySampleRateChanged()
     emit sampleRateChanged(newSampleRate);
 }
 
+void PreferencesDialogStandalone::notifyMidiInputsChanged()
+{
+    emit midiInputsChanged(getMidiInputsStatus());
+}
+
+void PreferencesDialogStandalone::notifySyncOutputsChanged()
+{
+    emit syncInputsChanged(getSyncOutputsStatus());
+}
+
 void PreferencesDialogStandalone::initialize(PreferencesTab initialTab, const persistence::Settings *settings, const QMap<QString, QString> &jamRecorders)
 {
     PreferencesDialog::initialize(initialTab, settings, jamRecorders);
@@ -215,6 +225,24 @@ void PreferencesDialogStandalone::removeBlackListedPlugins()
     }
 }
 
+QList<bool> PreferencesDialogStandalone::getMidiInputsStatus() const
+{
+    QList<bool> midiInputsStatus;
+    auto midiBoxes = ui->midiContentPanel->findChildren<QCheckBox *>();
+    for (auto check : midiBoxes)
+        midiInputsStatus.append(check->isChecked());
+    return midiInputsStatus;
+}
+
+QList<bool> PreferencesDialogStandalone::getSyncOutputsStatus() const
+{
+    QList<bool> syncOutputsStatus;
+    auto syncBoxes = ui->syncContentPanel->findChildren<QCheckBox *>();
+    for (auto check : syncBoxes)
+        syncOutputsStatus.append(check->isChecked());
+    return syncOutputsStatus;
+}
+
 void PreferencesDialogStandalone::selectAudioTab()
 {
     ui->prefsTab->setCurrentWidget(ui->tabAudio);
@@ -254,6 +282,7 @@ void PreferencesDialogStandalone::populateMidiTab()
                 bool deviceIsSelected = i < midiInputsStatus.size() && midiInputsStatus.at(i);
                 bool isNewDevice = i >= midiInputsStatus.size();
                 checkBox->setChecked(midiInputsStatus.isEmpty() || deviceIsSelected || isNewDevice);
+                connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(notifyMidiInputsChanged()));
             }
         }
         QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -279,6 +308,7 @@ void PreferencesDialogStandalone::populateSyncTab() {
                 bool deviceIsSelected = i < syncOutputsStatus.size() && syncOutputsStatus.at(i);
                 bool isNewDevice = i >= syncOutputsStatus.size();
                 checkBox->setChecked(syncOutputsStatus.isEmpty() || deviceIsSelected || isNewDevice);
+                connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(notifySyncOutputsChanged()));
             }
         }
         QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -462,20 +492,9 @@ void PreferencesDialogStandalone::accept()
     auto firstOut = ui->comboFirstOutput->currentData().toInt();
     auto lastOut = ui->comboLastOutput->currentData().toInt();
 
-    QList<bool> midiInputsStatus;
-    // build midi inputs devices status
-    auto midiBoxes = ui->midiContentPanel->findChildren<QCheckBox *>();
-    for (auto check : midiBoxes)
-        midiInputsStatus.append(check->isChecked());
-
-    QList<bool> syncOutputsStatus;
-    auto syncBoxes = ui->syncContentPanel->findChildren<QCheckBox *>();
-    for (auto check : syncBoxes)
-        syncOutputsStatus.append(check->isChecked());
-
     PreferencesDialog::accept();
 
-    emit ioPreferencesChanged(midiInputsStatus, syncOutputsStatus,
+    emit ioPreferencesChanged(getMidiInputsStatus(), getSyncOutputsStatus(),
                               selectedAudioInputDevice, selectedAudioOutputDevice,
                               firstIn, lastIn, firstOut, lastOut);
 }
@@ -501,7 +520,7 @@ void PreferencesDialogStandalone::populateVstTab()
 }
 
 void PreferencesDialogStandalone::selectTab(int index)
-{
+{ 
     switch (static_cast<PreferencesTab>(index)) {
     case PreferencesTab::TabAudio:
         populateAudioTab();

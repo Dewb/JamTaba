@@ -56,6 +56,8 @@ protected slots: // TODO change to private slots?
     void setGlobalPreferences(const QList<bool> &midiInputsStatus, const QList<bool> &syncOutputsStatus,
                               QString audioInputDevice, QString audioOutputDevice,
                               int firstIn, int lastIn, int firstOut, int lastOut);
+    void setMidiPreferences(const QList<bool> &midiInputsStatus);
+    void setSyncPreferences(const QList<bool> &syncOutputsStatus);
 
     // plugin finder
     void showPluginScanDialog();

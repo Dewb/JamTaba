@@ -386,6 +386,10 @@ PreferencesDialog *MainWindowStandalone::createPreferencesDialog()
     // setup standalone specific signals
     connect(dialog, &PreferencesDialogStandalone::ioPreferencesChanged, this,
             &MainWindowStandalone::setGlobalPreferences);
+    connect(dialog, &PreferencesDialogStandalone::midiInputsChanged, this,
+            &MainWindowStandalone::setMidiPreferences);
+    connect(dialog, &PreferencesDialogStandalone::syncInputsChanged, this,
+            &MainWindowStandalone::setSyncPreferences);
 
     connect(dialog, &PreferencesDialogStandalone::rejected, this,
             &MainWindowStandalone::restartAudioAndMidi);
@@ -493,6 +497,16 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
                                  "The audio device can't be started! Please check your audio device and try restart Jamtaba!"));
         // controller->useNullAudioDriver();
     }
+}
+
+void MainWindowStandalone::setMidiPreferences(const QList<bool> &midiInputsStatus)
+{
+   controller->storeMidiSettings(midiInputsStatus);
+}
+
+void MainWindowStandalone::setSyncPreferences(const QList<bool> &syncOutputsStatus)
+{
+    controller->storeSyncSettings(syncOutputsStatus);
 }
 
 // input selection changed by user or by system

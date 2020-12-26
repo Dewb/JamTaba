@@ -35,6 +35,9 @@ signals:
                               QString selectedInputAudioDevice, QString selectedOutputAudioDevice,
                               int firstIn, int lastIn, int firstOut, int lastOut);
 
+    void midiInputsChanged(QList<bool> midiInputsStatus);
+    void syncInputsChanged(QList<bool> syncOutputsStatus);
+
     void sampleRateChanged(int newSampleRate);
     void bufferSizeChanged(int newBufferSize);
 
@@ -63,6 +66,8 @@ private slots:
 
     void notifySampleRateChanged();
     void notifyBufferSizeChanged();
+    void notifyMidiInputsChanged();
+    void notifySyncOutputsChanged();
 
 protected slots:
     void selectTab(int index) override;
@@ -75,6 +80,9 @@ private:
 
     audio::AudioDriver *audioDriver;
     midi::MidiDriver *midiDriver;
+
+    QList<bool> getMidiInputsStatus() const;
+    QList<bool> getSyncOutputsStatus() const;
 
     void selectAudioTab();
     void selectMidiTab();

@@ -660,6 +660,16 @@ void MainController::storeIOSettings(int firstIn, int lastIn, int firstOut, int 
 
 }
 
+void MainController::storeMidiSettings(const QList<bool> &midiInputsStatus)
+{
+    settings.setMidiSettings(midiInputsStatus);
+}
+
+void MainController::storeSyncSettings(const QList<bool> &syncOutputsStatus)
+{
+    settings.setSyncSettings(syncOutputsStatus);
+}
+
 void MainController::removeTrack(long trackID)
 {
     QMutexLocker locker(&mutex);
