@@ -62,6 +62,8 @@ void PreferencesDialogStandalone::populateAllTabs()
 
     populateMidiTab();
 
+    populateSyncTab();
+
     populateVstTab();
 }
 
