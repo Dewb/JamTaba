@@ -400,7 +400,20 @@
        </item>
        <item>
         <widget class="QWidget" name="syncContentPanel" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_15"/>
+         <layout class="QVBoxLayout" name="verticalLayout_15">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
         </widget>
        </item>
       </layout>
