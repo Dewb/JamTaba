@@ -370,7 +370,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_14" stretch="0,0,0">
        <item>
-        <widget class="QLabel" name="midiTabMessage_2">
+        <widget class="QLabel" name="syncTabMessage">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
