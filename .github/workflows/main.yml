@@ -44,12 +44,11 @@ jobs:
           macdeployqt Jamtaba2.app
           popd          
           
-      # - name: Build AU plugin
-      #  run: |
-      #   pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
-      #   #xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target CocoaUI clean build
-      #   xcodebuild -project JamTaba.xcodeproj -target JamTaba clean build
-      #   popd
+      - name: Build AU plugin
+        run: |
+          pushd ${GITHUB_WORKSPACE}/PROJECTS/AUPlugin
+          xcodebuild -project JamTaba.xcodeproj -scheme JamTaba -target CocoaUI clean build
+          popd
           
       - name: Create MacOS installer
         run: |
