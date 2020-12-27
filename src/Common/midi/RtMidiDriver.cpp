@@ -12,8 +12,6 @@ RtMidiDriver::RtMidiDriver(const QList<bool> &inputDeviceStatuses, const QList<b
     qCDebug(jtMidi) << "Initializing rtmidi...";
 
     QList<bool> inputStatuses(inputDeviceStatuses);
-    QList<bool> outputStatuses(outputDeviceStatuses);
-
     int maxInputDevices = getMaxInputDevices();
 
     qCDebug(jtMidi) << "MIDI INPUT DEVICES FOUND idx:" << maxInputDevices;
@@ -25,6 +23,9 @@ RtMidiDriver::RtMidiDriver(const QList<bool> &inputDeviceStatuses, const QList<b
         }
     }
 
+    setInputDevicesStatus(inputStatuses);
+
+    QList<bool> outputStatuses(outputDeviceStatuses);
     int maxOutputDevices = getMaxOutputDevices();
     qCDebug(jtMidi) << "MIDI OUTPUT DEVICES FOUND idx:" << maxOutputDevices;
 
@@ -35,15 +36,16 @@ RtMidiDriver::RtMidiDriver(const QList<bool> &inputDeviceStatuses, const QList<b
         }
     }
 
-    setDevicesStatus(inputStatuses, outputStatuses);
+    setOutputDevicesStatus(outputStatuses);
 
     qCDebug(jtMidi) << "rtmidi initialized!";
 }
 
-void RtMidiDriver::setDevicesStatus(const QList<bool> &inputStatuses, const QList<bool> &outputStatuses){
-    qCDebug(jtMidi) << "Setting devices status in RtMidiDriver";
+void RtMidiDriver::setInputDevicesStatus(const QList<bool> &inputStatuses)
+{
+    qCDebug(jtMidi) << "Setting input devices status in RtMidiDriver";
 
-    release();
+    releaseInputs();
 
     int inputDevicesCount = getMaxInputDevices();
     QList<bool> validInputStatuses;
@@ -54,6 +56,19 @@ void RtMidiDriver::setDevicesStatus(const QList<bool> &inputStatuses, const QLis
             validInputStatuses.append(true); //new connected devices are enabled by default
     }
 
+    MidiDriver::setInputDevicesStatus(inputStatuses);
+
+    for (int s = 0; s < validInputStatuses.size(); ++s) {
+        midiInStreams.append(new RtMidiIn());
+    }
+}
+
+void RtMidiDriver::setOutputDevicesStatus(const QList<bool> &outputStatuses)
+{
+    qCDebug(jtMidi) << "Setting output devices status in RtMidiDriver";
+
+    releaseOutputs();
+
     int outputDevicesCount = getMaxOutputDevices();
     QList<bool> validOutputStatuses;
     for (int i = 0; i < outputDevicesCount; ++i) {
@@ -63,20 +78,19 @@ void RtMidiDriver::setDevicesStatus(const QList<bool> &inputStatuses, const QLis
             validOutputStatuses.append(true); //new connected devices are enabled by default
     }
 
-    MidiDriver::setDevicesStatus(inputStatuses, outputStatuses);
+    MidiDriver::setOutputDevicesStatus(outputStatuses);
 
-    for (int s = 0; s < validInputStatuses.size(); ++s) {
-        midiInStreams.append(new RtMidiIn());
-    }
     for (int s = 0; s < validOutputStatuses.size(); ++s) {
         midiOutStreams.append(new RtMidiOut());
     }
 }
 
+
 void RtMidiDriver::start(const QList<bool> &inputDeviceStatuses, const QList<bool> &outputDeviceStatuses){
     qCDebug(jtMidi) << "Starting RtMidiDriver";
 
-    setDevicesStatus(inputDeviceStatuses, outputDeviceStatuses);
+    setInputDevicesStatus(inputDeviceStatuses);
+    setOutputDevicesStatus(outputDeviceStatuses);
 
     if (!hasInputDevices() && !hasOutputDevices()) {
         return;
@@ -140,12 +154,12 @@ void RtMidiDriver::stop(){
    qCDebug(jtMidi) << "RtMidiDriver stoped!";
 }
 
-void RtMidiDriver::release(){
+void RtMidiDriver::releaseInputs(){
 
-    if (midiInStreams.isEmpty() && midiOutStreams.isEmpty())
+    if (midiInStreams.isEmpty())
         return;
 
-    qCDebug(jtMidi) << "Releasing RtMidiDriver";
+    qCDebug(jtMidi) << "Releasing RtMidiDriver inputs";
 
     foreach (RtMidiIn* stream, midiInStreams) {
         if (stream) {
@@ -155,6 +169,16 @@ void RtMidiDriver::release(){
             delete stream;
         }
     }
+    midiInStreams.clear();
+}
+
+void RtMidiDriver::releaseOutputs(){
+
+    if (midiOutStreams.isEmpty())
+        return;
+
+    qCDebug(jtMidi) << "Releasing RtMidiDriver outputs";
+
     foreach (RtMidiOut* stream, midiOutStreams) {
         if (stream) {
             if (stream->isPortOpen()) {
@@ -163,7 +187,6 @@ void RtMidiDriver::release(){
             delete stream;
         }
     }
-    midiInStreams.clear();
     midiOutStreams.clear();
 }
 

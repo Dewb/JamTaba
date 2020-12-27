@@ -12,6 +12,11 @@ MidiDriver::~MidiDriver()
 {
 }
 
+void MidiDriver::release() {
+    releaseInputs();
+    releaseOutputs();
+}
+
 int MidiDriver::getFirstGloballyEnableInputDevice() const
 {
     int total = getMaxInputDevices();
@@ -22,9 +27,13 @@ int MidiDriver::getFirstGloballyEnableInputDevice() const
     return -1;
 }
 
-void MidiDriver::setDevicesStatus(const QList<bool> &inputStatuses, const QList<bool> &outputStatuses)
+void MidiDriver::setInputDevicesStatus(const QList<bool> &inputStatuses)
 {
     this->inputDevicesEnabledStatuses = inputStatuses;
+}
+
+void MidiDriver::setOutputDevicesStatus(const QList<bool> &outputStatuses)
+{
     this->outputDevicesEnabledStatuses = outputStatuses;
 }
 

@@ -20,7 +20,11 @@ public:
 
     virtual void start(const QList<bool> &inputDeviceStatuses, const QList<bool> &outputDeviceStatuses) = 0;
     virtual void stop() = 0;
-    virtual void release() = 0;
+    virtual void releaseInputs() = 0;
+    virtual void releaseOutputs() = 0;
+
+    // release both inputs and outputs
+    void release();
 
     virtual bool hasInputDevices() const = 0;
     virtual bool hasOutputDevices() const = 0;
@@ -36,7 +40,8 @@ public:
     virtual bool inputDeviceIsGloballyEnabled(int deviceIndex) const;
     virtual bool outputDeviceIsGloballyEnabled(int deviceIndex) const;
     int getFirstGloballyEnableInputDevice() const;
-    virtual void setDevicesStatus(const QList<bool> &inputStatuses, const QList<bool> &outputStatuses);
+    virtual void setInputDevicesStatus(const QList<bool> &inputStatuses);
+    virtual void setOutputDevicesStatus(const QList<bool> &outputStatuses);
 
     virtual void sendClockStart() const = 0;
     virtual void sendClockStop() const = 0;
@@ -61,7 +66,11 @@ class NullMidiDriver : public MidiDriver
     {
     }
 
-    inline virtual void release() override
+    inline virtual void releaseInputs() override
+    {
+    }
+
+    inline virtual void releaseOutputs() override
     {
     }
 

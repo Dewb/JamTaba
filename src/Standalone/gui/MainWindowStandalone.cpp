@@ -481,15 +481,14 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
     controller->storeIOSettings(firstIn, lastIn, firstOut, lastOut, audioInputDevice,
                                 audioOutputDevice, midiInputsStatus, syncOutputsStatus);
 
-    auto midiDriver = controller->getMidiDriver();
-    midiDriver->setDevicesStatus(midiInputsStatus, syncOutputsStatus);
-
     controller->updateInputTracksRange();
 
     for (auto channel : getLocalChannels<LocalTrackGroupViewStandalone *>())
         channel->refreshInputSelectionNames();
 
+    auto midiDriver = controller->getMidiDriver();
     midiDriver->start(midiInputsStatus, syncOutputsStatus);
+
     if (!audioDriver->start()) {
         qCritical() << "Error starting audio device";
         QMessageBox::warning(this, tr("Audio error!"),
@@ -501,12 +500,16 @@ void MainWindowStandalone::setGlobalPreferences(const QList<bool> &midiInputsSta
 
 void MainWindowStandalone::setMidiPreferences(const QList<bool> &midiInputsStatus)
 {
-   controller->storeMidiSettings(midiInputsStatus);
+    controller->storeMidiSettings(midiInputsStatus);
+    auto midiDriver = controller->getMidiDriver();
+    midiDriver->setInputDevicesStatus(midiInputsStatus);
 }
 
 void MainWindowStandalone::setSyncPreferences(const QList<bool> &syncOutputsStatus)
 {
     controller->storeSyncSettings(syncOutputsStatus);
+    auto midiDriver = controller->getMidiDriver();
+    midiDriver->setOutputDevicesStatus(syncOutputsStatus);
 }
 
 // input selection changed by user or by system
